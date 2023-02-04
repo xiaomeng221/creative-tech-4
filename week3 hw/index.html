@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A puppy who is willing to read a Shakespeare's poem for you.</title>
+
+</head>
+
+<body>
+    <button role= "button" id= "initTrigger"> You got a letter! </button>
+    <section id="puppyMessage"></section>
+    <section id="ShakespearePoem"></section>
+
+    <script>
+        const triggerButton = document.getElementById('initTrigger')
+        const puppyMessage = document.getElementById ('puppyMessage')
+        const shakespearePoem = document.getElementById ('ShakespearePoem')
+        const randomPuppyURL = "https://dog.ceo/api/breeds/image/random"
+        const randomPoemURL = "https://poetrydb.org/author,title/Shakespeare;Sonnet"
+
+
+        const fetchPuppyData = () => {
+            fetch(randomPuppyURL)
+            .then((response) =>  response.json() )
+            .then((payload) => appendPuppyData(payload))
+        }
+
+        const appendPuppyData = (data) => {
+            console.log (data)
+
+            const firstMessage = data.message
+            console.log(firstMessage);
+            // const messageImg = firstMessage.message
+            // console.log(messageImg)
+
+            const nameHeader = document.createElement ('h3')
+            nameHeader.innerText = "Let me read you a Shakespeare's sonnet."
+            puppyMessage.appendChild(nameHeader)
+
+            const image = document.createElement ('img')
+            image.src = firstMessage
+            puppyMessage.appendChild(image)
+
+////////////////////////////////////////////////////// add the poetry api
+            fetchShakespeareData ()
+        
+        }
+
+        const fetchShakespeareData = () => {
+            fetch(randomPoemURL)
+                .then((payload) =>  payload.json() )
+                .then((json) => appendShakespeareData((json)))
+        }
+            
+        const appendShakespeareData =(data) => {
+            const sonnet = data[0]
+            console.log(sonnet)
+
+            const textTitle= sonnet.title
+
+            const textHeader = document.createElement('h3');
+            textHeader.innerText = textTitle
+            shakespearePoem.appendChild(textHeader);
+
+            // const innerText= document.createElement('')
+
+            const lines = sonnet.lines;
+            console.log(lines);
+            for(let i=0; i<lines.length; i++){
+                console.log(i)
+                const lineText = document.createElement('p');
+                lineText.innerText = lines[i]
+                shakespearePoem.appendChild(lineText);
+            }
+
+        }
+
+        triggerButton.addEventListener("click", fetchPuppyData)
+
+    </script>
+
+</body>
+
+</html>
